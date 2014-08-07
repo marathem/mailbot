@@ -93,6 +93,13 @@ class Callback(object):
 
         return ''
 
+    def get_thread_id(self, message=None):
+        if message is None:
+            message = self.message
+        if 'X-GM-THRID' in message:
+            return message['X-GM-THRID']
+        return None
+
     def trigger(self):
         """Called when a mail matching the registered rules is received."""
         raise NotImplementedError("Must be implemented in a child class.")

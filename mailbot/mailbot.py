@@ -43,7 +43,7 @@ class MailBot(object):
     def get_messages(self):
         """Return the list of messages to process."""
         ids = self.get_message_ids()
-        return self.client.fetch(ids, ['RFC822'])
+        return self.client.fetch(ids, ['RFC822', 'X-GM-THRID'])
 
     def process_message(self, message, callback_class, rules):
         """Check if callback matches rules, and if so, trigger."""
@@ -60,6 +60,7 @@ class MailBot(object):
         for uid, msg in messages.items():
             self.mark_processing(uid)
             message = message_from_string(msg['RFC822'])
+            message['X-GM-THRID'] = msg['X-GM-THRID']
             for callback_class, rules in CALLBACKS_MAP.items():
                 self.process_message(message, callback_class, rules)
             self.mark_processed(uid)
